@@ -3,6 +3,7 @@ MEMORY {
   mrom  : ORIGIN = 0x20000000, LENGTH = 4K
   flash : ORIGIN = 0x30000000, LENGTH = 16M
   psram : ORIGIN = 0x80000000, LENGTH = 4M
+  sdram : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 
 SECTIONS {
@@ -34,7 +35,7 @@ SECTIONS {
     *(__am_apps.sdata*)
     __am_apps_data_end = .;
     . = ALIGN(8);
-  } > psram AT > flash : data
+  } > sdram AT > flash : data
 
   /* 获取rtt的data段的虚拟内存地址(VMA) */
   _data_extra       = ADDR(.data.extra);
@@ -54,7 +55,7 @@ SECTIONS {
     *(__am_apps.scommon*)
     __am_apps_bss_end = .;
     . = ALIGN(8);
-  } > psram
+  } > sdram
 
   /* 获取rtt的bss段的虚拟内存地址(VMA) */
   _bss_extra  = ADDR(.bss.extra);

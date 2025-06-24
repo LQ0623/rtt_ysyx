@@ -11,6 +11,7 @@
 #include <rtthread.h>
 #include <am.h>
 #include <klib.h>
+#include <klib-macros.h>
 
 #define UART_DEFAULT_BAUDRATE 115200
 
@@ -37,8 +38,23 @@ static int _uart_putc(struct rt_serial_device *serial, char c) {
 }
 
 static int _uart_getc(struct rt_serial_device *serial) {
-  static const char *p = "help\ndate\nversion\nfree\nps\npwd\nls\nmemtrace\nmemcheck\nutest_list\n";//am_hello\n";//am_fceux_am\n";//am_snake\nam_typing_game\nam_microbench\n";
-  return (*p != '\0' ? *(p ++) : -1);
+  // static const char *p = "help\ndate\nversion\nfree\nps\npwd\nls\nmemtrace\nmemcheck\nutest_list\n";//am_hello\n";//am_fceux_am\n";//am_snake\nam_typing_game\nam_microbench\n";
+  // return (*p != '\0' ? *(p ++) : -1);
+  static const char PREDEF_INPUT[] = 
+    "help\ndate\nversion\nfree\nps\npwd\nls\nmemtrace\nmemcheck\nutest_list\n";
+  static const char *p    = PREDEF_INPUT;
+  static bool string_end  = false;    // 判断预置的字符串是否输入完
+
+  if(string_end){
+    return io_read(AM_UART_RX).data;
+  }
+
+  if(*p != '\0'){
+    return *(p++);
+  } else {
+    string_end = true;
+    return io_read(AM_UART_RX).data;
+  }
 }
 
 const struct rt_uart_ops _uart_ops = {

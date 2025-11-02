@@ -8,8 +8,15 @@ NAME = rtthread
 SRCS = $(shell find src -name "*.c")
 CFLAGS += -DHAVE_CCONFIG_H -D__RTTHREAD__
 CFLAGS += -Wno-nonnull-compare
-# LDFLAGS += -T extra.ld
-LDFLAGS += -T extra_ysyxsoc.ld
+
+# 根据ARCH设置不同的链接脚本
+ifeq ($(ARCH),riscv32e-ysyxsoc)
+    LDFLAGS += -T extra_ysyxsoc.ld
+	CXXFLAGS += -DARCH_RISCV32E_YSYXSOC
+else
+    LDFLAGS += -T extra.ld
+endif
+
 -include $(FILE_MK)
 -include $(AM_APPS_MK)
 include $(AM_HOME)/Makefile

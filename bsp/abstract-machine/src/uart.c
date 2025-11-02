@@ -38,8 +38,7 @@ static int _uart_putc(struct rt_serial_device *serial, char c) {
 }
 
 static int _uart_getc(struct rt_serial_device *serial) {
-  // static const char *p = "help\ndate\nversion\nfree\nps\npwd\nls\nmemtrace\nmemcheck\nutest_list\n";//am_hello\n";//am_fceux_am\n";//am_snake\nam_typing_game\nam_microbench\n";
-  // return (*p != '\0' ? *(p ++) : -1);
+#ifdef ARCH_RISCV32E_YSYXSOC
   static const char PREDEF_INPUT[] = 
     "help\ndate\nversion\nfree\nps\npwd\nls\nmemtrace\nmemcheck\nutest_list\n";
   static const char *p    = PREDEF_INPUT;
@@ -55,6 +54,10 @@ static int _uart_getc(struct rt_serial_device *serial) {
     string_end = true;
     return io_read(AM_UART_RX).data;
   }
+#else
+  static const char *p = "help\ndate\nversion\nfree\nps\npwd\nls\nmemtrace\nmemcheck\nutest_list\n";//am_hello\n";//am_fceux_am\n";//am_snake\nam_typing_game\nam_microbench\n";
+  return (*p != '\0' ? *(p ++) : -1);
+#endif
 }
 
 const struct rt_uart_ops _uart_ops = {

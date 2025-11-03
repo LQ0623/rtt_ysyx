@@ -12,7 +12,8 @@ CFLAGS += -Wno-nonnull-compare
 # 根据ARCH设置不同的链接脚本
 ifeq ($(ARCH),riscv32e-ysyxsoc)
     LDFLAGS += -T extra_ysyxsoc.ld
-	CXXFLAGS += -DARCH_RISCV32E_YSYXSOC
+	CFLAGS += -DARCH_RISCV32E_YSYXSOC
+    CXXFLAGS += -DARCH_RISCV32E_YSYXSOC
 else
     LDFLAGS += -T extra.ld
 endif
@@ -20,6 +21,10 @@ endif
 -include $(FILE_MK)
 -include $(AM_APPS_MK)
 include $(AM_HOME)/Makefile
+
+$(info ARCH=$(ARCH))
+$(info CFLAGS=$(CFLAGS))
+$(info CXXFLAGS=$(CXXFLAGS))
 
 $(RTCONFIG_H):
 	touch $@
